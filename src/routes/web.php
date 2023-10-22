@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\GoogleFitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// OAuth
+Route::get('login/google', [GoogleFitController::class, 'redirectToProvider'])->name('login.google');
+Route::get('callback/google', [GoogleFitController::class, 'handleProviderCallback']);
+
+// 歩数取得
+Route::get('steps', [GoogleFitController::class, 'showSteps'])->name('show.steps');

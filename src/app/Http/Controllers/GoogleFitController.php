@@ -2,58 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\GoogleUser;
-use Illuminate\Http\Request;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class GoogleFitController extends Controller
 {
-    public function redirectToProvider()
-    {
-        return Socialite::driver('google')
-            ->scopes(['https://www.googleapis.com/auth/fitness.activity.read'])
-            ->redirect();
-    }
-
-    public function handleProviderCallback()
-    {
-        $googleUser = Socialite::driver('google')->user();
-
-        // すでに登録されているか確認
-        $user = User::whereEmail($googleUser->getEmail())->first();
-        if (!$user) {
-            $user = User::create([
-                'name' => $googleUser->getName(),
-                'email' => $googleUser->getEmail(),
-            ]);
-        }
-
-        // google_usersテーブルに情報を保存
-        $googleUserData = [
-            'user_id' => $user->id,
-            'google_id' => $googleUser->getId(),
-            'avatar' => $googleUser->getAvatar(),
-            'token' => $googleUser->token,
-            'refresh_token' => $googleUser->refreshToken,
-            'expires_at' => Carbon::now()->addSeconds($googleUser->expiresIn)
-        ];
-
-        $googleAccount = GoogleUser::updateOrCreate(
-            ['user_id' => $user->id],
-            $googleUserData
-        );
-
-        // ログイン処理
-        Auth::login($user, true);
-        
-        // 歩数データを取得して表示するページにリダイレクト
-        return redirect('/steps');
-    }
-
     public function showSteps()
     {
         $user = Auth::user();

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GoogleFitController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,12 +16,15 @@ use App\Http\Controllers\GoogleFitController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('dannneza');
 });
 
 // OAuth
-Route::get('login/google', [GoogleFitController::class, 'redirectToProvider'])->name('login.google');
-Route::get('callback/google', [GoogleFitController::class, 'handleProviderCallback']);
+Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('callback/google', [LoginController::class, 'handleGoogleCallback']);
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-// 歩数取得
-Route::get('steps', [GoogleFitController::class, 'showSteps'])->name('show.steps');
+Route::middleware(['auth'])->group(function () {    
+    // 歩数取得
+    Route::get('steps', [GoogleFitController::class, 'showSteps'])->name('show.steps');
+});

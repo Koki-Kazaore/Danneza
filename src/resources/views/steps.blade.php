@@ -6,8 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-    logged in successfully!
-    本日の歩数は{{ $steps }}です！
-    <?php phpinfo() ?>
+    <p>logged in successfully!</p>
+    <p>本日の歩数は{{ $steps }}です！</p>
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+    <button type="submit">Logout</button>
+</form>
 </body>
 </html>

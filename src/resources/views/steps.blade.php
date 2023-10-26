@@ -8,6 +8,7 @@
 <body>
     <p>logged in successfully!</p>
     <p>本日の歩数は{{ $steps }}です！</p>
+    <p>本日のだんねポイントは{{ $points }}です！</p>
     <form action="{{ route('logout') }}" method="POST">
         @csrf
     <button type="submit">Logout</button>

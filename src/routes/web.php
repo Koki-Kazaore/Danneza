@@ -15,11 +15,12 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
+// welcome画面
 Route::get('/', function () {
-    return view('dannneza');
+    return view('welcome');
 });
 
-// OAuth
+// OAuthログイン
 Route::get('login/google', [LoginController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('callback/google', [LoginController::class, 'handleGoogleCallback']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');

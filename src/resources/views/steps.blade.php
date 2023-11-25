@@ -1,17 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>logged in successfully!</p>
-    <p>本日の歩数は{{ $steps }}です！</p>
-    <p>本日のだんねポイントは{{ $points }}です！</p>
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-    <button type="submit">Logout</button>
-</form>
-</body>
-</html>
+@extends('layouts.default', ['documentTitle' => __('だんねポイント.com | ダッシュボード')])
+
+@section('content')
+<h1 class="title">ダッシュボード</h1>
+<div class="dashboard-info">
+    <p>今日の歩数: {{ $steps }}歩</p>
+    <p>獲得ポイント: {{ $points }}ポイント</p>
+    <!-- <p>今日の日照時間: 5時間</p> -->
+</div>
+@endsection

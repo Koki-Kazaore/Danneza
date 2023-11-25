@@ -2,24 +2,52 @@ version: "3.9"
 services:
   app:
     build: ./infra/php
+    # ボリュームを設定する(名前付きボリューム:コンテナ側ボリュームの場所)
     volumes:
       - ./src:/data
 
   web:
     image: nginx:1.20-alpine
+    # ポートフォワードの指定(ホスト側ポート:コンテナ側ポート)
     ports:
       - 8080:80
+    # ボリュームを設定する(名前付きボリューム:コンテナ側ボリュームの場所)
     volumes:
       - ./src:/data
       - ./infra/nginx/default.conf:/etc/nginx/conf.d/default.conf
     working_dir: /data
+    # サービスの依存関係を指定(nginxをphpに依存させる)
+    depends_on:
+      - app
 
   db:
     build: ./infra/mysql
+    # 名前付きボリュームを設定する(名前付きボリューム:コンテナ側ボリュームの場所)
     volumes:
       - db-store:/var/lib/mysql
+      - db-my.conf:/etc/mysql/conf.d/my.conf
+      - db-sql:/docker-entrypoint-initdb.d
+    # ポートフォワードの指定(ホスト側ポート:コンテナ側ポート)
     ports:
       - 3306:3306
 
+  node:
+    image: node:14.18-alpine
+    # コンテナ内の標準出力とホストの出力を設定:trueを指定
+    tty: true
+    # ボリュームを設定する(名前付きボリューム:コンテナ側ボリュームの場所)
+    volumes:
+      - ./src:/data
+    # コンテナ起動後のカレントディレクトを設定
+    working_dir: /data
+
+  mail:
+    image: mailhog/mailhog
+    # ポートフォワードの指定(ホスト側ポート:コンテナ側ポート)
+    ports:
+      - 8025:8025
+    
 volumes:
   db-store:
+  db-my.conf:
+  db-sql:
